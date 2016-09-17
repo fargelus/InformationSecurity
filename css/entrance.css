@@ -1,0 +1,48 @@
+.main{
+	display: table;
+	margin: 200px auto;
+	border-spacing: 10px;
+	background-color: #eee;
+	border: 1px solid black;
+	font-size: 62.5%;
+}
+
+.main h1{
+	font-size: 1.6em;
+	text-align: center;
+	font-style: italic;
+}
+
+.main p{
+	font-size: 1.4em
+}
+
+.firstRow{
+	display: table-row;
+}
+
+.firstRow p{
+	display: table-cell;
+}
+
+.firstRow input{
+	display: table-cell;
+}
+
+.secondRow{
+	display: table-row;
+}
+
+.secondRow p{
+	display: table-cell;
+}
+
+.secondRow input{
+	display: table-cell;
+}
+
+.secondRow + p{
+	text-align: right;
+	padding-right: 8px;
+}
+
