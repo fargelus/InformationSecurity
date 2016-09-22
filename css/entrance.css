@@ -35,6 +35,11 @@
 
 .thirdRow + p{
 	text-align: right;
-	padding-right: 8px;
+	padding-right: 10px;
+	position: relative;
 }
 
+.help img{
+	position: absolute;
+	left: 25%;
+}
