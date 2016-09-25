@@ -41,5 +41,17 @@
 
 .help img{
 	position: absolute;
-	left: 25%;
+	left: 52%;
+}
+
+input:focus:required:invalid{
+	background-image: url("../ico/unchecked.png");
+	background-repeat: no-repeat;
+	background-position: center right;
+}
+
+input:focus:required:valid{
+	background-image: url("../ico/checked.png");
+	background-repeat: no-repeat;
+	background-position: center right;	
 }

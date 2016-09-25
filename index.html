@@ -4,12 +4,13 @@
 		<title> Вход в систему </title>
 		<meta charset="utf-8">
 		<link href="css/entrance.css" rel="stylesheet">
-		<script src="js/validation.js"></script>
+		<script type="text/javascript" src="js/loadData.js"></script>
 	</head>
 	<body>
 			<div class="main">
+			<!-- добавить атрибут required -->
 				<h1> Вход в систему </h1>
-				<form action="cgi-bin/form_handler.py" method="post">
+				<form name="securityCheck" action="cgi-bin/changePasswd.py" method="post" onsubmit="loadData(); return false;">
 					<div class="firstRow">
 						<p> Логин: </p>
 						<input type="text" name="login">
@@ -24,8 +25,8 @@
 					</div>
 
 					<p>
-						<input type="submit" value="Отмена">
-						<input type="submit" value="Ок">
+						<!-- <input type="button" value="Отмена" onclick="window.close();"> -->
+						<input type="submit" value="Войти">
 						<a class="help" title="О программе" onclick="alert('Автор: Немыкин Д.А.\n'+'Вариант: 17')"> 
 						<img src="ico/info.png" alt="О программе"> </a>
 					</p>
