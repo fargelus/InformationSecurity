@@ -10,18 +10,21 @@
 			<div class="main">
 			<!-- добавить атрибут required -->
 				<h1> Вход в систему </h1>
-				<form name="securityCheck" action="cgi-bin/changePasswd.py" method="post" onsubmit="loadData(); return false;">
+				<form name="securityCheck" action="cgi-bin/form_handler.py" method="post" 
+					  onsubmit="loadData(); return false;">
+
 					<div class="firstRow">
 						<p> Логин: </p>
-						<input type="text" name="login">
+						<input type="text" name="login" required="">
 					</div>
 					<div class="secondRow">
 						<p> Пароль: </p>
-						<input type="password" name="password">
+						<input type="password" name="password" required="" id="pwd" onchange="validatePassword()">
 					</div>
 					<div class="thirdRow">
 						<p> Подтвердите пароль: </p>
-						<input type="password" name="confirm_pwd">
+						<input type="password" name="confirm_pwd" required="" id="conf_pwd"
+						onkeyup="validatePassword()">
 					</div>
 
 					<p>

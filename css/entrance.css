@@ -29,10 +29,6 @@
 	display: table-cell;
 }
 
-.thirdRow{
-	display: none;
-}
-
 .thirdRow + p{
 	text-align: right;
 	padding-right: 10px;
@@ -41,9 +37,10 @@
 
 .help img{
 	position: absolute;
-	left: 52%;
+	left: 65%;
 }
 
+/*
 input:focus:required:invalid{
 	background-image: url("../ico/unchecked.png");
 	background-repeat: no-repeat;
@@ -55,3 +52,4 @@ input:focus:required:valid{
 	background-repeat: no-repeat;
 	background-position: center right;	
 }
+*/

@@ -1,5 +1,25 @@
+/*
+  loadData.js -- клиентский скрипт,
+  проверяет пароли на соотвествие друг с другом,
+  загружает данные из бд и позволяет войти в систему
+*/
+
+function validatePassword() {
+		var password = document.getElementById("pwd");
+  		var confirm_password = document.getElementById("conf_pwd");
+
+  		if(password.value != confirm_password.value) {
+    		confirm_password.setCustomValidity("Пароли не совпадают");
+  		} 
+  		else 
+  		{
+    		confirm_password.setCustomValidity('');
+  		}
+}
+
+
 function loadData() {
-	var xhr = new XMLHttpRequest();
+	  var xhr = new XMLHttpRequest();
     xhr.open('GET', '../db.json', false);
     xhr.send();
 
@@ -11,7 +31,8 @@ function loadData() {
         var data = xhr.responseText;
         var jsonResponse = JSON.parse(data);
         var pwd = document.securityCheck.password.value;
-        if (jsonResponse["admin"] == pwd)
+        var pwd = pwd.toLowerCase();
+        if (jsonResponse["admin"][0] == pwd)
         	document.securityCheck.submit();
     }
 }
