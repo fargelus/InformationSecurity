@@ -18,30 +18,40 @@ def list_of_users_win():
         <head>
             <meta charset="utf-8">
             <title>Обработчик формы</title>
+            <script type="text/javascript" src="../js/jQuery.js"></script>
+            <script type="text/javascript" src="../js/addUser.js"></script>
+            <!-- <link href="../css/usersList.css" rel="stylesheet"> -->
         </head>
         <body>""")
 
 	print("""<div class="main">
 				<h1> Список пользователей </h1>
 				<form name="admin" class="adminInput" method="post" action="somescript">
-					<textarea placeholder="Список пользователей" name="Список пользователей"></textarea>
+					<textarea disabled placeholder="Список пользователей" name="Список пользователей" id="usersList"></textarea>
+					
+					<!-- 
 					<p> Блокировка <input type="checkbox"> </p>
 					<p> Парольное ограничение <input type="checkbox"> </p>
 					<p>
-						<input type="submit" value="Добавить нового пользователя">
-					</p>
-					<p>
+						<input type="button" value="Добавить нового пользователя">
+					</p> -->
+
+					<div class="add_form">
 						<p> Имя нового пользователя: </p>
-						<input type="text" name="login">
+						<input type="text" name="add_login" required id="loginData">
 						<p> Задайте пароль: </p>
-						<input type="text" name="login">
+						<input type="text" name="add_password" required id="passwordData">
+						<p>
+							<input type="button" value="Добавить" class="finally_add" onclick="addUser()">
+						</p>
+					</div>
+
+					<!--
 					<p>
-						<input type="submit" value="Ок">
-						<input type="submit" value="Отмена">
-					</p>
+						<input type="button" value="Сменить пароль">
+					</p> -->
 					<p>
-						<input type="submit" value="Сохранить">
-						<input type="submit" value="Отмена">
+						<input type="button" value="Сохранить">
 					</p>
 				</form>
 			</div>""")
