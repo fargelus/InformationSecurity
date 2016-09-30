@@ -13,31 +13,34 @@ function addUser() {
 	if (checkInput()){
 		var login = $('#loginData').val();
 		var password = $('#passwordData').val();
-		var login_pwd = login + ': ' + password + '\n';
-		var lines = $('textarea').val().split('\n');
+		var login_pwd = login + password;
+		var items = [];
+
+		$('table td:nth-child(-n+2)').each(function() {
+			items.push( $(this).text() );
+		});
+
+		// проверяем на повторяющийся логин
 		var is_duplicate = false;
 
-		var login_to_add = login_pwd.split(':')[0];
+		var table_login_pwd = '';
+		var count = -1;
+		for (var i = 0; i < items.length; i++) {
+			table_login_pwd = table_login_pwd + items[i];
+			count = count + 1;
 
-		// добавляем только уникальные значения
-		for(var i = 0; i < lines.length; i++){
-			if ($.trim(login_pwd) == lines[i]){
-				is_duplicate = true;
-				break;
-			}
-
-			// меняем пароль, доделать
-			if (lines[i].split(':')[0] == login_to_add)
+			if (count == 1)
 			{
-				alert(login_pwd);
-				$('textarea').replace(lines[i], login_pwd);	
+				if (login_pwd == $.trim(table_login_pwd)){	
+					is_duplicate = true;
+					break;
+				}
+				table_login_pwd = '';
+				count = -1;
 			}
 		}
-		
-		// добавляем в текстовый блок
-		if (!is_duplicate){
-			text = $('textarea');
-			text.val(text.val() + login_pwd);
-		}
+
+		if (!is_duplicate)
+			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>Нет</td><td>Нет</td></tr>');
 	}
 }

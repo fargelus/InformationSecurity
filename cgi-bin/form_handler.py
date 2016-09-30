@@ -27,7 +27,16 @@ def list_of_users_win():
 	print("""<div class="main">
 				<h1> Список пользователей </h1>
 				<form name="admin" class="adminInput" method="post" action="somescript">
-					<textarea disabled placeholder="Список пользователей" name="Список пользователей" id="usersList"></textarea>
+					<table border="1">
+						<tr>
+							<th> Логин </th>
+							<th> Пароль </th>
+							<th> Блокировка </th>
+							<th> Ограничение </th>
+						</tr>
+					</table>
+
+					<!-- <textarea disabled placeholder="Список пользователей" name="Список пользователей" id="usersList"></textarea>-->
 					
 					<!-- 
 					<p> Блокировка <input type="checkbox"> </p>
