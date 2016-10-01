@@ -9,7 +9,7 @@
 import cgi
 import json
 
-path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)/db.json"
+path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)/admin.json"
 
 def list_of_users_win():
 	print("Content-type: text/html\n")
@@ -27,6 +27,7 @@ def list_of_users_win():
 	print("""<div class="main">
 				<h1> Список пользователей </h1>
 				<form name="admin" class="adminInput" method="post" action="somescript">
+
 					<table border="1">
 						<tr>
 							<th> Логин </th>
@@ -60,7 +61,7 @@ def list_of_users_win():
 						<input type="button" value="Сменить пароль">
 					</p> -->
 					<p>
-						<input type="button" value="Сохранить">
+						<input type="button" value="Сохранить" id="add_btn">
 					</p>
 				</form>
 			</div>""")

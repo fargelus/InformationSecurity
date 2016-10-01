@@ -20,7 +20,7 @@ function validatePassword() {
 
 function loadData() {
 	  var xhr = new XMLHttpRequest();
-    xhr.open('GET', '../db.json', false);
+    xhr.open('GET', '../admin.json', false);
     xhr.send();
 
     if (xhr.status != 200) {
@@ -30,6 +30,8 @@ function loadData() {
         // вывести результат
         var data = xhr.responseText;
         var jsonResponse = JSON.parse(data);
+        
+        // переделать здесь ошибка
         var pwd = document.securityCheck.password.value;
         var pwd = pwd.toLowerCase();
         if (jsonResponse["admin"][0] == pwd)

@@ -41,6 +41,57 @@ function addUser() {
 		}
 
 		if (!is_duplicate)
-			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>Нет</td><td>Нет</td></tr>');
+			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>No</td><td>No</td></tr>');
 	}
 }
+
+function tableToJson() {
+	// преобразуем данные из таблицы в json
+	// для ajax
+
+	var login_list = [];
+	$('table td:nth-child(-n+1)').each(function(){
+		login_list.push( $(this).text() );
+	});
+
+	var attr_list = [];
+	$('table td:nth-child(n+2)').each(function(){
+		attr_list.push( $(this).text() );
+	});	
+
+	var data = {};
+	for (var i = 0; i < login_list.length; i++) {
+		var login = login_list[i];
+		var attr = [];
+		for (var j = 3 * i; j <= 3 * i + 2; j++) {
+			attr.push(attr_list[j]);		
+		}
+		data[login] = attr;
+	}
+	return data;
+}
+
+$(document).ready(function() {
+	$("#add_btn").click(function() {
+		var data = tableToJson();
+		JSON.stringify(JSON.stringify(data))
+
+		$.ajax({
+			type: "post",
+			data: JSON.stringify(data),
+			url: "../cgi-bin/saveUsers.py",
+			datatype: "json",
+			async: false,
+			success: function(response){
+				console.log(response.message);
+	        	console.log(response.keys);
+	        	console.log(response.data);
+			},
+			error: function(response){
+				console.log(response.message);
+	        	console.log(response.keys);
+	        	console.log(response.data);
+			}
+		});
+	});
+});
