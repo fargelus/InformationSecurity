@@ -9,7 +9,7 @@
 import cgi
 import json
 
-path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)/admin.json"
+path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
 def list_of_users_win():
 	print("Content-type: text/html\n")
@@ -73,12 +73,16 @@ def change_pwd(login):
 	with open(path_db) as db:
 		data = json.load(db)
 
+	# если входит админ, то
+	# увеличиваем кол-во входов на 1
 	if login == "admin":
 		data[login][2] += 1
-	data[login][1] = "true"
+		with open(path_db, 'w') as outfile:
+			json.dump(data, outfile)
 
-	with open(path_db, 'w') as outfile:
-		json.dump(data, outfile)
+	with open("/home/dima/Рабочий стол/ИБ(1-я лаба)/buffer", 'w') as buf:
+		buf.write(login + '\n')
+		buf.write(path_db + '\n')
 
 	print("Content-type: text/html\n")
 	print("""<!DOCTYPE HTML>
@@ -88,8 +92,9 @@ def change_pwd(login):
             <title>Смена пароля</title>
             <link href="../css/entrance.css" rel="stylesheet">
             <link href="../css/change_password.css" rel="stylesheet">
+            <script type="text/javascript" src="../js/jQuery.js"></script>
             <script type="text/javascript" src="../js/loadData.js"></script>
-            <script type="text/javascript" src="../js/test.js"></script>
+            <script type="text/javascript" src="../js/savePassword.js"></script>
         </head>
         <body>""")
 
@@ -98,14 +103,14 @@ def change_pwd(login):
 				<form name="admin" action="saveData.py" method="post">
 					<div class="firstRow">
 						<p> Новый пароль: </p>
-						<input type="password" name="newPasswd" required id="pwd" onchange=validatePassword();>
+						<input type="password" name="newPasswd" required id="pwd" onchange="validatePassword();">
 					</div>
 					<div class="secondRow">
 						<p> Подтверждение: </p>
-						<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword()">
+						<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
 					</div>
 					<p>
-						<input type="submit" value="Поменять">
+						<input type="button" value="Поменять" id="save_btn">
 					</p>
 				</form>
 			</div>""")
@@ -117,6 +122,11 @@ if __name__ == '__main__':
 	form = cgi.FieldStorage()
 	login = form.getfirst("login")
 
+	if login == "admin":
+		path_db += "/admin.json"
+	else:
+		path_db += "/users.json"
+
 	with open(path_db) as db:
 		data = json.load(db)
 	if login == "admin" and data["admin"][2] > 0:
@@ -124,4 +134,3 @@ if __name__ == '__main__':
 	else:
 		change_pwd(login)
 	
-

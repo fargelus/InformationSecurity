@@ -19,8 +19,12 @@ function validatePassword() {
 
 
 function loadData() {
-	  var xhr = new XMLHttpRequest();
-    xhr.open('GET', '../admin.json', false);
+    var input_login = document.getElementById("input_for_login").value;
+    var xhr = new XMLHttpRequest();
+    if (input_login.toLowerCase() == "admin")
+        xhr.open('GET', '../admin.json', false);        
+    else
+        xhr.open('GET', '../users.json', false);
     xhr.send();
 
     if (xhr.status != 200) {
@@ -33,8 +37,15 @@ function loadData() {
         
         // переделать здесь ошибка
         var pwd = document.securityCheck.password.value;
-        var pwd = pwd.toLowerCase();
-        if (jsonResponse["admin"][0] == pwd)
-        	document.securityCheck.submit();
+        console.log(pwd);
+        try{
+            if (jsonResponse[input_login][0] == pwd)
+                document.securityCheck.submit();
+            else
+                alert("Bad");  
+        }
+        catch(err){
+          alert("Такого логина нет в базе данных");
+        }
     }
 }

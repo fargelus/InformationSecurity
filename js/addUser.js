@@ -68,13 +68,27 @@ function tableToJson() {
 		}
 		data[login] = attr;
 	}
+	
 	return data;
 }
+
+$(document).ready(function(){
+	$.getJSON('../users.json', function(json){
+		$.each(json, function(key, value){
+        	var tr = $('<tr>');
+        	tr.append("<td>" + key + "</td>");
+        	for (var i = 0; i < value.length; i++) {
+        		tr.append("<td>" + value[i] + "</td>");
+        	}
+        	tr.append('</tr>');
+        	$('table').append(tr);
+		});
+	});
+});
 
 $(document).ready(function() {
 	$("#add_btn").click(function() {
 		var data = tableToJson();
-		JSON.stringify(JSON.stringify(data))
 
 		$.ajax({
 			type: "post",
@@ -95,3 +109,4 @@ $(document).ready(function() {
 		});
 	});
 });
+
