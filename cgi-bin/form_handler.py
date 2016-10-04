@@ -76,13 +76,9 @@ def change_pwd(login):
 	# если входит админ, то
 	# увеличиваем кол-во входов на 1
 	if login == "admin":
-		data[login][2] += 1
+		# data[login][1] += 1
 		with open(path_db, 'w') as outfile:
 			json.dump(data, outfile)
-
-	with open("/home/dima/Рабочий стол/ИБ(1-я лаба)/buffer", 'w') as buf:
-		buf.write(login + '\n')
-		buf.write(path_db + '\n')
 
 	print("Content-type: text/html\n")
 	print("""<!DOCTYPE HTML>
@@ -98,7 +94,11 @@ def change_pwd(login):
         </head>
         <body>""")
 
-	print("""<div class="main">
+	first_index = path_db.rfind('/')
+	last_index = path_db.rfind('.')
+	address = path_db[first_index+1:last_index]
+
+	main_part = """<div class="main">
 				<h1> Смена пароля </h1>
 				<form name="admin" action="saveData.py" method="post">
 					<div class="firstRow">
@@ -110,10 +110,11 @@ def change_pwd(login):
 						<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
 					</div>
 					<p>
-						<input type="button" value="Поменять" id="save_btn">
+						<input type="button" value="Поменять" id="save_btn" onclick="save({0}, {1});">
 					</p>
 				</form>
-			</div>""")
+			</div>""".format(login, address)
+	print(main_part)
 
 	print("""</body>
         </html>""")
@@ -129,7 +130,7 @@ if __name__ == '__main__':
 
 	with open(path_db) as db:
 		data = json.load(db)
-	if login == "admin" and data["admin"][2] > 0:
+	if login == "admin" and data["admin"][1] > 0:
 		list_of_users_win()
 	else:
 		change_pwd(login)
