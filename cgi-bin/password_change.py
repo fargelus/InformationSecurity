@@ -8,36 +8,9 @@
 """
 
 import sys
-# from form_handler import path_db
 import json
 import fileinput
 import cgi
-
-"""receive_password = json.load(sys.stdin)"""
-
-"""with open("/home/dima/Рабочий стол/ИБ(1-я лаба)/buffer") as buf:
-	data = buf.readlines()
-
-login = data[0].rstrip()
-address = data[1].rstrip()
-
-with open(address) as db:
-	data = json.load(db)
-
-data[login][0] = receive_password["password"]"""
-
-"""with open(address, 'w') as db:
-	json.dump(data, db) """
-
-"""with open(path_db) as db:
-	data = json.load(db)
-
-data[login] = receive_password
-
-with open(path_db, 'w') as db:
-	json.dump(data)
-
-"""
 
 fs = cgi.FieldStorage()
 
@@ -46,18 +19,31 @@ sys.stdout.write("Content-Type: application/json")
 sys.stdout.write("\n")
 sys.stdout.write("\n")
 
-
-
 result = {}
 result['success'] = True
 result['message'] = "The command Completed Successfully"
 result['keys'] = ",".join(fs.keys())
 
-d = {}
+receive = {}
 for k in fs.keys():
-    d[k] = fs.getvalue(k)
+    receive[k] = fs.getvalue(k)
 
-result['data'] = d
+address = ""
+if receive["address"] == "admin":
+	address = "/home/dima/Рабочий стол/ИБ(1-я лаба)/admin.json"
+else:
+	address = "/home/dima/Рабочий стол/ИБ(1-я лаба)/users.json"
+
+with open(address) as db:
+	data = json.load(db)
+
+data[receive["login"]][0] = receive["password"]
+
+with open(address, 'w') as db:
+	json.dump(data, db)
+
+# сформировать ответ
+result['data'] = receive
 
 sys.stdout.write(json.dumps(result,indent=1))
 sys.stdout.write("\n")

@@ -22,7 +22,11 @@ function loadData() {
     var input_login = document.getElementById("input_for_login").value;
     var xhr = new XMLHttpRequest();
     if (input_login.toLowerCase() == "admin")
+    {
+        input_login = input_login.toLowerCase();
+        console.log(input_login);
         xhr.open('GET', '../admin.json', false);        
+    }
     else
         xhr.open('GET', '../users.json', false);
     xhr.send();
@@ -37,7 +41,6 @@ function loadData() {
         
         // переделать здесь ошибка
         var pwd = document.securityCheck.password.value;
-        console.log(pwd);
         try{
             if (jsonResponse[input_login][0] == pwd)
                 document.securityCheck.submit();
