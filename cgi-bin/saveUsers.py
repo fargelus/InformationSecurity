@@ -5,25 +5,34 @@
 	в бд
 """
 
-import sys, json
-# from form_handler import path_db
+import sys, json, cgi
 
-receive_json = json.load(sys.stdin)
+users_path = "/home/dima/Рабочий стол/ИБ(1-я лаба)/users.json"
 
-with open("/home/dima/Рабочий стол/ИБ(1-я лаба)/users.json", 'w') as outfile:
-	json.dump(receive_json, outfile)
+fs = cgi.FieldStorage()
 
-"""data.update(receive_json)
+sys.stdout.write("Content-Type: application/json")
 
-with open(path_db, 'w') as outfile:
-	json.dump(outfile, data)"""
+sys.stdout.write("\n")
+sys.stdout.write("\n")
 
+result = {}
+result['success'] = True
+result['message'] = "The command Completed Successfully"
+result['keys'] = ",".join(fs.keys())
 
+receive = {}
+for k in fs.keys():
+    receive[k] = fs.getvalue(k)
 
+with open(users_path, 'w') as buf:
+	json.dump(receive, buf)
 
+# сформировать ответ
+result['data'] = receive
 
+sys.stdout.write(json.dumps(result,indent=1))
+sys.stdout.write("\n")
 
-
-
-
+sys.stdout.close()
 

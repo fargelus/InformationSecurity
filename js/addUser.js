@@ -41,7 +41,16 @@ function addUser() {
 		}
 
 		if (!is_duplicate)
-			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>No</td><td>No</td></tr>');
+		{
+			var is_block = 'No', is_limit = 'No';
+			if ($('#block').is(":checked"))
+				is_block = 'Yes';
+			if ($('#limitation').is(":checked"))
+				is_limit = 'Yes';
+
+			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>' + is_block + '</td><td>'
+				+ is_limit + '</td></tr>');
+		}
 	}
 }
 
@@ -72,6 +81,7 @@ function tableToJson() {
 	return data;
 }
 
+/* добавление данных в таблицу */
 $(document).ready(function(){
 	$.getJSON('../users.json', function(json){
 		$.each(json, function(key, value){
@@ -86,27 +96,32 @@ $(document).ready(function(){
 	});
 });
 
+/* сохранить данные в базе */
 $(document).ready(function() {
-	$("#add_btn").click(function() {
+	$("#save_btn").click(function() {
 		var data = tableToJson();
 
 		$.ajax({
-			type: "post",
-			data: JSON.stringify(data),
+			type: "POST",
+			data: data,
 			url: "../cgi-bin/saveUsers.py",
 			datatype: "json",
-			async: false,
+			traditional: true,
 			success: function(response){
-				console.log(response.message);
-	        	console.log(response.keys);
-	        	console.log(response.data);
+				alert('Данные успешно сохранены');
 			},
 			error: function(response){
-				console.log(response.message);
-	        	console.log(response.keys);
-	        	console.log(response.data);
+				console.log(response.status + ': ' + response.text);
 			}
 		});
 	});
 });
 
+/* выйти при подтверждении */
+$(document).ready(function(){
+	$("#exit_btn").click(function() {
+		if (confirm("Вы действительно хотите выйти?")) {
+			window.location.replace('http://localhost:8000');
+    	}
+    });
+});

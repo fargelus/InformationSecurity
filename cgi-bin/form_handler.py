@@ -8,6 +8,7 @@
 
 import cgi
 import json
+import pickle
 
 path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
@@ -37,20 +38,15 @@ def list_of_users_win():
 						</tr>
 					</table>
 
-					<!-- <textarea disabled placeholder="Список пользователей" name="Список пользователей" id="usersList"></textarea>-->
-					
-					<!-- 
-					<p> Блокировка <input type="checkbox"> </p>
-					<p> Парольное ограничение <input type="checkbox"> </p>
-					<p>
-						<input type="button" value="Добавить нового пользователя">
-					</p> -->
-
 					<div class="add_form">
 						<p> Имя нового пользователя: </p>
 						<input type="text" name="add_login" required id="loginData">
 						<p> Задайте пароль: </p>
 						<input type="text" name="add_password" required id="passwordData">
+
+						<p> Блокировка <input type="checkbox" id="block"> </p>
+						<p> Парольное ограничение <input type="checkbox" id="limitation"> </p> 
+
 						<p>
 							<input type="button" value="Добавить" class="finally_add" onclick="addUser()">
 						</p>
@@ -61,8 +57,11 @@ def list_of_users_win():
 						<input type="button" value="Сменить пароль">
 					</p> -->
 					<p>
-						<input type="button" value="Сохранить" id="add_btn">
+						<input type="button" value="Сохранить" id="save_btn">
 					</p>
+					<p>
+						<input type="button" value="Выход" id="exit_btn">
+         			</p>
 				</form>
 			</div>""")
 
@@ -98,6 +97,9 @@ def change_pwd(login):
 	last_index = path_db.rfind('.')
 	address = path_db[first_index+1:last_index]
 
+	with open("/home/dima/Рабочий стол/ИБ(1-я лаба)/buffer", 'w') as buf:
+		buf.write(login)
+
 	main_part = """<div class="main">
 				<h1> Смена пароля </h1>
 				<form name="admin" action="saveData.py" method="post">
@@ -110,10 +112,10 @@ def change_pwd(login):
 						<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
 					</div>
 					<p>
-						<input type="button" value="Поменять" id="save_btn" onclick="save({0}, {1});">
+						<input type="button" value="Поменять" id="save_btn" onclick="save({});">
 					</p>
 				</form>
-			</div>""".format(login, address)
+			</div>""".format(login)
 	print(main_part)
 
 	print("""</body>
