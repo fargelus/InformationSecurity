@@ -1,7 +1,10 @@
-function save(log) {
+function save() {
+	console.log(localStorage.getItem("login"));
+	console.log(localStorage.getItem("address"));
+
 	/* save.js - отправляет пароль 
 	на сервер совместно с метаданными */
-	alert('Ok');
+	
 
 	/*var new_password = document.getElementById('pwd');
 	if (new_password.value.length != 0){

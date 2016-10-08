@@ -20,15 +20,21 @@ function validatePassword() {
 
 function loadData() {
     var input_login = document.getElementById("input_for_login").value;
+    localStorage.setItem("login", input_login);
+
     var xhr = new XMLHttpRequest();
     if (input_login.toLowerCase() == "admin")
     {
+        localStorage.setItem("address", "admin");
         input_login = input_login.toLowerCase();
         console.log(input_login);
         xhr.open('GET', '../admin.json', false);        
     }
     else
+    {
+        localStorage.setItem("address", "user");
         xhr.open('GET', '../users.json', false);
+    }
     xhr.send();
 
     if (xhr.status != 200) {

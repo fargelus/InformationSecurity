@@ -93,13 +93,6 @@ def change_pwd(login):
         </head>
         <body>""")
 
-	first_index = path_db.rfind('/')
-	last_index = path_db.rfind('.')
-	address = path_db[first_index+1:last_index]
-
-	with open("/home/dima/Рабочий стол/ИБ(1-я лаба)/buffer", 'w') as buf:
-		buf.write(login)
-
 	main_part = """<div class="main">
 				<h1> Смена пароля </h1>
 				<form name="admin" action="saveData.py" method="post">
@@ -112,10 +105,10 @@ def change_pwd(login):
 						<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
 					</div>
 					<p>
-						<input type="button" value="Поменять" id="save_btn" onclick="save({});">
+						<input type="button" value="Поменять" id="save_btn" onclick="save()">
 					</p>
 				</form>
-			</div>""".format(login)
+			</div>"""
 	print(main_part)
 
 	print("""</body>
