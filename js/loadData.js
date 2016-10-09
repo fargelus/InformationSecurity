@@ -32,7 +32,7 @@ function loadData() {
     }
     else
     {
-        localStorage.setItem("address", "user");
+        localStorage.setItem("address", "users");
         xhr.open('GET', '../users.json', false);
     }
     xhr.send();
@@ -49,7 +49,12 @@ function loadData() {
         var pwd = document.securityCheck.password.value;
         try{
             if (jsonResponse[input_login][0] == pwd)
-                document.securityCheck.submit();
+            {
+                if (jsonResponse[input_login][1] == "Yes")
+                  alert("Данный логин заблокирован администратором");
+                else
+                  document.securityCheck.submit();
+            }
             else
                 alert("Bad");  
         }
