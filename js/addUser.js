@@ -1,3 +1,7 @@
+function add() {
+	document.getElementById('add_form').style.display = "block";
+}
+
 function checkInput() {
 	var login = document.getElementById('loginData');
 	var checked = true;
@@ -51,6 +55,7 @@ function addUser() {
 			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>' + is_block + '</td><td>'
 				+ is_limit + '</td></tr>');
 		}
+		// здесь сделать возможность изменять данные админу
 	}
 }
 

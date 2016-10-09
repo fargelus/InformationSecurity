@@ -8,7 +8,6 @@
 
 import cgi
 import json
-import pickle
 
 path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
@@ -21,7 +20,7 @@ def list_of_users_win():
             <title>Обработчик формы</title>
             <script type="text/javascript" src="../js/jQuery.js"></script>
             <script type="text/javascript" src="../js/addUser.js"></script>
-            <!-- <link href="../css/usersList.css" rel="stylesheet"> -->
+            <link href="../css/usersList.css" rel="stylesheet">
         </head>
         <body>""")
 
@@ -38,7 +37,11 @@ def list_of_users_win():
 						</tr>
 					</table>
 
-					<div class="add_form">
+					<p>
+						<input type="button" value="Добавить нового пользователя" onclick="add();">
+					</p>
+
+					<div id="add_form">
 						<p> Имя нового пользователя: </p>
 						<input type="text" name="add_login" required id="loginData">
 						<p> Задайте пароль: </p>

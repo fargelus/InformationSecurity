@@ -4,6 +4,8 @@
   загружает данные из бд и позволяет войти в систему
 */
 
+var countError = 0
+
 function validatePassword() {
 		var password = document.getElementById("pwd");
   		var confirm_password = document.getElementById("conf_pwd");
@@ -56,7 +58,17 @@ function loadData() {
                   document.securityCheck.submit();
             }
             else
-                alert("Bad");  
+            {
+                if (countError == 3){
+                  window.open('', '_self', ''); 
+                  window.close();
+                }
+                else{
+                  alert("Bad");
+                  countError = countError + 1;
+                  console.log(countError);
+                }
+            }
         }
         catch(err){
           alert("Такого логина нет в базе данных");
