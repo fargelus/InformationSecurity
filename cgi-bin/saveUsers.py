@@ -19,11 +19,14 @@ sys.stdout.write("\n")
 result = {}
 result['success'] = True
 result['message'] = "The command Completed Successfully"
-result['keys'] = ",".join(fs.keys())
 
 receive = {}
-for k in fs.keys():
-    receive[k] = fs.getvalue(k)
+try:
+	result['keys'] = ",".join(fs.keys())
+	for k in fs.keys():
+		receive[k] = fs.getvalue(k)
+except TypeError:
+	pass
 
 with open(users_path, 'w') as buf:
 	json.dump(receive, buf)

@@ -2,8 +2,70 @@ function add() {
 	document.getElementById('add_form').style.display = "block";
 }
 
-function checkInput() {
-	var login = document.getElementById('loginData');
+function change() {
+	if ($('table td:first-child').text().trim() == ""){
+		alert('Таблица пуста');
+		return;
+	}
+
+	document.getElementById('add_form').style.display = "none";	
+	document.getElementById('change_form').style.display = "block";
+	document.getElementById('login_select').style.display = "block";
+}
+
+// переход на div с паролем и свойствами
+function go_next() {
+	var login_val = document.getElementById('login_for_change');
+	if (checkInput(login_val)){
+		if (inTable(login_val.value))
+		{
+			document.getElementById('login_select').style.display = "none";
+			document.getElementById('change_select').style.display = "block";
+		}
+	}
+}
+
+// есть ли введённый логин в таблице
+function inTable(login) {
+	var answer = false;
+	$('table td:first-child').each(function (){
+		if ($(this).text() == login)
+			 answer = true;
+	});
+
+	return answer;
+}
+
+function saveChanges(){
+	var login_val = document.getElementById('login_for_change').value;
+	var passwd_val = document.getElementById('change_passwd').value;
+	var is_block = 'No';
+	var is_limit = 'No';
+	if ($('change_block').is(":checked"))
+		is_block = 'Yes';
+	if ($('change_limit').is(":checked"))
+		is_limit = 'Yes';
+	$('table td:first-child').each(function (){
+		if ($(this).text() == login_val){
+			var new_row = '<tr><td>' + login_val + '</td><td>' + passwd_val + '</td><td>'
+							+ is_block + '</td><td>' + is_limit + '</td></tr>';
+			$(this).parent().replaceWith(new_row); 
+		}
+	});
+	document.getElementById('change_select').style.display = "none";
+	document.getElementById('change_form').style.display = "none";
+}
+
+function del() {
+	var row_to_del = $('#login_for_change').val();
+	$('table td:first-child').each(function (){
+		if ($(this).text() == row_to_del)
+			 $(this).closest('tr').remove();
+	});
+	document.getElementById('change_select').style.display = "none";			
+}
+
+function checkInput(login) {
 	var checked = true;
 	if (login.value.length == 0){
 		login.setCustomValidity("Поле пусто");
@@ -14,7 +76,8 @@ function checkInput() {
 }
 
 function addUser() {
-	if (checkInput()){
+	var login = document.getElementById('loginData');
+	if (checkInput(login)){
 		var login = $('#loginData').val();
 		var password = $('#passwordData').val();
 		var login_pwd = login + password;
@@ -29,8 +92,11 @@ function addUser() {
 
 		var table_login_pwd = '';
 		var count = -1;
+		// var number_dupl_item = -1;
+
 		for (var i = 0; i < items.length; i++) {
 			table_login_pwd = table_login_pwd + items[i];
+			console.log(table_login_pwd);
 			count = count + 1;
 
 			if (count == 1)
@@ -55,7 +121,6 @@ function addUser() {
 			$('table').append('<tr><td>' + login + '</td><td>' + password + '</td><td>' + is_block + '</td><td>'
 				+ is_limit + '</td></tr>');
 		}
-		// здесь сделать возможность изменять данные админу
 	}
 }
 

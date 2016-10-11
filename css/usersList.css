@@ -1,3 +1,73 @@
-#add_form{
+.main{
+	border: 1px solid black;
+	background-color: #eee;
+	margin: 200px auto;
+	width: 50%;
+	font-size: 62.5%;
+}
+
+.main table{
+	margin: 15px auto;
+	font-size: 1.2em;
+	border-collapse: collapse;
+}
+
+.main table caption{
+	margin-bottom: 15px;
+	font-size: 1.6em;
+	font-style: italic;
+}
+
+.main table th{
+	font-weight: normal;
+	padding: 10px;
+	background: linear-gradient(to bottom, #cfe4e9, #68a4b1);
+	color: #333;
+}
+
+.main table tr:nth-of-type(odd){
+	background-color: #d8eaee;
+}
+
+.main table td{
+	text-align: center;
+}
+
+input[value="Добавить нового пользователя"]{
+	margin-left: 25%;
+}
+
+input[value="Сохранить"]{
+	margin-left: 25%;
+}
+
+#add_form, #change_form{
+	display: none;
+	font-size: 1.4em;
+	margin-left: 25%;
+}
+
+.labels{
+	display: table;
+	border-spacing: 10px;
+}
+
+.rows{
+	display: table-row;
+}
+
+.rows p{
+	display: table-cell;
+}
+
+.others{
+	margin-left: 10px;
+}
+
+input[value="Дальше"]{
+	margin-left: 10px;
+}
+
+#change_select{
 	display: none;
 }
