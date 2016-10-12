@@ -18,6 +18,7 @@ def list_of_users_win():
         <head>
             <meta charset="utf-8">
             <title>Обработчик формы</title>
+            <script type="text/javascript" src="../js/CryptoJS v3.1.2/rollups/aes.js"></script>
             <script type="text/javascript" src="../js/jQuery.js"></script>
             <script type="text/javascript" src="../js/addUser.js"></script>
             <link href="../css/usersList.css" rel="stylesheet">
@@ -49,7 +50,7 @@ def list_of_users_win():
 							</div>
 							<div class="rows">
 								<p> Задайте пароль: </p>
-								<input type="text" name="add_password" required id="passwordData">
+								<input type="password" name="add_password" required id="passwordData">
 							</div>
 						</div>	
 						<div class="others">					
@@ -77,7 +78,7 @@ def list_of_users_win():
 							<div class="labels">
 								<div class="rows">
 									<p> Изменить пароль: </p>
-									<input type="text" id="change_passwd">
+									<input type="password" id="change_passwd" required>
 								</div>
 							</div>
 
@@ -111,7 +112,7 @@ def change_pwd(login):
 	# если входит админ, то
 	# увеличиваем кол-во входов на 1
 	if login == "admin":
-		data[login][1] = 1
+		# data[login][1] = 1 FIX ME
 		with open(path_db, 'w') as outfile:
 			json.dump(data, outfile)
 
@@ -132,17 +133,25 @@ def change_pwd(login):
 	main_part = """<div class="main">
 				<h1> Смена пароля </h1>
 				<form name="admin" action="saveData.py" method="post">
-					<div class="firstRow">
-						<p> Новый пароль: </p>
-						<input type="password" name="newPasswd" required id="pwd" onchange="validatePassword();">
+
+					
+						<div class="firstRow">
+							<p> Старый пароль: </p>
+							<input type="password" name="oldPasswd" required id="oldPwd">
+						</div>
+						<div class="secondRow">
+							<p> Новый пароль: </p>
+							<input type="password" name="newPasswd" required id="pwd" onchange="validatePassword();">
+						</div>
+						<div class="thirdRow">
+							<p> Повтор нового пароля: </p>
+							<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
+						</div>
+						<p>
+							<input type="button" value="Поменять" id="save_btn" onclick="save()">
+						</p>
 					</div>
-					<div class="secondRow">
-						<p> Подтверждение: </p>
-						<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
-					</div>
-					<p>
-						<input type="button" value="Поменять" id="save_btn" onclick="save()">
-					</p>
+
 				</form>
 			</div>"""
 	print(main_part)

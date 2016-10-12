@@ -7,7 +7,7 @@
 var countError = 0
 
 function validatePassword() {
-		var password = document.getElementById("pwd");
+		  var password = document.getElementById("pwd");
   		var confirm_password = document.getElementById("conf_pwd");
 
   		if(password.value != confirm_password.value) {
