@@ -77,16 +77,15 @@ def list_of_users_win():
 						<div id="change_select">
 							<div class="labels">
 								<div class="rows">
-									<p> Изменить пароль: </p>
+									<p> Изменить пароль: </p> <!-- пароль хранится в расшифрованном виде -->
 									<input type="password" id="change_passwd" required>
 								</div>
 							</div>
-
 							<div class="others">							
 								<p> Блокировка <input type="checkbox" id="change_block"> </p>
 								<p> Парольное ограничение <input type="checkbox" id="change_limit"> </p>
 								<p>
-									<input type="button" value="Удалить пользователя" onclick="del();">	
+									<input type="button" value="Удалить пользователя" onclick="del();">
 								</p>
 								<p>
 									<input type="button" value="Сохранить изменения" onclick="saveChanges();">	

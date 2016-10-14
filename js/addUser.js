@@ -186,8 +186,17 @@ $(document).ready(function(){
         	var tr = $('<tr>');
         	tr.append("<td>" + key + "</td>");
         	for (var i = 0; i < value.length; i++) {
-        		tr.append("<td>" + value[i] + "</td>");
+
+        		// i == 0 - это пароль для каждого логина
+        		if (i == 0){
+        			var encrypt_password = CryptoJS.AES.encrypt(value[i], 'password');
+        			encryptedPasswords.push(encrypt_password);
+        			tr.append("<td>" + encrypt_password + "</td>");
+        		} 			
+        		else
+        			tr.append("<td>" + value[i] + "</td>");
         	}
+
         	tr.append('</tr>');
         	$('table').append(tr);
 		});
