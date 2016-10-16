@@ -17,54 +17,80 @@ function change() {
 	document.getElementById('add_form').style.display = "none";	
 	document.getElementById('change_form').style.display = "block";
 	document.getElementById('login_select').style.display = "block";
+
+	document.getElementById('login_for_change').value = '';
+	document.getElementById('change_block').checked = false;
+	document.getElementById('change_limit').checked = false;
+
+	document.getElementById('change_select').style.display = 'none';
 }
 
 // переход на div с паролем и свойствами
 function go_next() {
-	var login_val = document.getElementById('login_for_change');
+	var login_val = document.getElementById('login_for_change').value;
 	if (checkInput(login_val)){
-		if (inTable(login_val.value))
-		{
 			document.getElementById('login_select').style.display = "none";
 			document.getElementById('change_select').style.display = "block";
+
+			var rowNumber = getNumberOfRow(login_val);
+			var currEncryptedPassword = encryptedPasswords[rowNumber];
+			document.getElementById('change_passwd').value = currEncryptedPassword;
+			rowNumber++;
+
+			var blockInTable = $('table tr:eq(' + rowNumber + ') td:eq(2)');
+			var limitInTable = $('table tr:eq(' + rowNumber + ') td:eq(3)');
+			if (blockInTable.text() == "Yes")
+				document.getElementById("change_block").checked = true;
+			if (limitInTable.text() == "Yes")
+				document.getElementById("change_limit").checked = true;
+			
+	}
+	else {
+		document.getElementById('login_for_change').setCustomValidity("Введённый логин неверен");
+		document.getElementById('login_for_change').value = '';
+	}	
+}
+
+// найти номер строки в таблице, содержащий данный логин
+function getNumberOfRow(login) {
+	var count = 0;
+	$('table td:first-child').each(function () {
+		if ($(this).text() == login){
+			return false;
 		}
-	}
-}
-
-// есть ли введённый логин в таблице
-function inTable(login) {
-	var answer = false;
-	$('table td:first-child').each(function (){
-		if ($(this).text() == login)
-			 answer = true;
+		count++;
 	});
-
-	return answer;
+	return count;
 }
 
-function saveChanges(){
+function saveChanges() {
 	var login_val = document.getElementById('login_for_change').value;
-	var passwd_val = document.getElementById('change_passwd');
-	if (checkInput(passwd_val))
-	{
-		var is_block = 'No';
-		var is_limit = 'No';
-		if ($('change_block').is(":checked"))
-			is_block = 'Yes';
-		if ($('change_limit').is(":checked"))
-			is_limit = 'Yes';
-		$('table td:first-child').each(function (){
-			if ($(this).text() == login_val){
-				var new_row = '<tr><td>' + login_val + '</td><td>' + passwd_val + '</td><td>'
-							+ is_block + '</td><td>' + is_limit + '</td></tr>';
-				$(this).parent().replaceWith(new_row); 
-			}
-		});
-		document.getElementById('change_select').style.display = "none";
-		document.getElementById('change_form').style.display = "none";
+	var passwd_val = document.getElementById('change_passwd').value;
+	var numberLoginInRow = getNumberOfRow(login_val);
+	var encryptedValue = encryptedPasswords[numberLoginInRow];
+	if (passwd_val != encryptedValue){
+		var encryptedChangePassword = CryptoJS.AES.encrypt(passwd_val, 'password');
+		encryptedPasswords[numberLoginInRow] = encryptedChangePassword;
 	}
-	else
-		passwd_val.setCustomValidity("Надо ввести пароль");
+
+	var is_block = 'No';
+	var is_limit = 'No';
+	if ($('#change_block').prop("checked"))
+		is_block = 'Yes';
+	if ($('#change_limit').prop(":checked")){
+		is_limit = 'Yes';
+		console.log('Yes');
+	}
+	$('table td:first-child').each(function (){
+		if ($(this).text() == login_val){
+			var new_row = '<tr><td>' + login_val + '</td><td>' + encryptedPasswords[numberLoginInRow] 
+			+ '</td><td>' + is_block + '</td><td>' + is_limit + '</td></tr>';
+			$(this).parent().replaceWith(new_row); 
+		}
+	});
+	
+	document.getElementById('change_select').style.display = "none";
+	document.getElementById('change_form').style.display = "none";
 }
 
 function del() {
@@ -76,13 +102,17 @@ function del() {
 	document.getElementById('change_select').style.display = "none";			
 }
 
+// проверка ввода логина 
+// на форме изменить
 function checkInput(login) {
-	var checked = true;
-	if (login.value.length == 0){
-		login.setCustomValidity("Поле пусто");
-		checked = false;
+	var checked = false;
+	if (login.length != 0){
+		$('table td:first-child').each(function (){
+			if ($(this).text() == login)
+			 	checked = true;
+		});
 	}
-
+	
 	return checked;
 }
 
