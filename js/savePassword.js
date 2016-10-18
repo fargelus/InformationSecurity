@@ -1,9 +1,6 @@
+/* save.js - отправляет пароль 
+   на сервер совместно с метаданными */
 function save() {
-	/* save.js - отправляет пароль 
-	на сервер совместно с метаданными */
-	/*console.log(localStorage.getItem("login"));
-	console.log(localStorage.getItem("address"));*/
-
 	// если пароли не совпадают известить об этом пользователя
 	if (!isPasswordsMatch()){
 		document.getElementById('pwd').setCustomValidity('Пароли не совпадают');
@@ -52,8 +49,8 @@ function save() {
 	}
 }
 
+// проверка подтверждения пароля
 function isPasswordsMatch() {
-	// проверка подтверждения пароля
 	var newPwd = document.getElementById('pwd').value;
 	var confirmedPwd = document.getElementById('conf_pwd').value;
 	if (newPwd == confirmedPwd)
@@ -61,8 +58,8 @@ function isPasswordsMatch() {
 	return false;
 }
 
+// проверка старого пароля перед сохранением нового
 function isOldPasswordCorrect() {
-	// проверка старого пароля перед сохранением нового
 	var retVal = false;
 	var oldPwd = document.getElementById('oldPwd').value;
 	var login_val = localStorage.getItem("login");
@@ -88,6 +85,7 @@ function isOldPasswordCorrect() {
     return retVal;	
 }
 
+// проверка на ограничение
 function is_limit(password) {
 	var answer = false;
 	var login = localStorage.getItem("login");
@@ -113,4 +111,16 @@ function is_limit(password) {
     }
 
 	return answer;
+}
+
+function validatePassword() {
+	var password = document.getElementById("pwd");
+  	var confirm_password = document.getElementById("conf_pwd");
+
+  	if(password.value != confirm_password.value) {
+    	confirm_password.setCustomValidity("Пароли не совпадают");
+  	} 
+  	else {
+    	confirm_password.setCustomValidity('');
+  	}
 }

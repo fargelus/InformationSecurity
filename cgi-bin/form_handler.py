@@ -111,7 +111,7 @@ def change_pwd(login):
 	# если входит админ, то
 	# увеличиваем кол-во входов на 1
 	if login == "admin":
-		# data[login][1] = 1 FIX ME
+		data[login][1] = 1
 		with open(path_db, 'w') as outfile:
 			json.dump(data, outfile)
 
@@ -124,7 +124,6 @@ def change_pwd(login):
             <link href="../css/entrance.css" rel="stylesheet">
             <link href="../css/change_password.css" rel="stylesheet">
             <script type="text/javascript" src="../js/jQuery.js"></script>
-            <script type="text/javascript" src="../js/loadData.js"></script>
             <script type="text/javascript" src="../js/savePassword.js"></script>
         </head>
         <body>""")

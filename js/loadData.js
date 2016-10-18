@@ -1,24 +1,9 @@
 /*
   loadData.js -- клиентский скрипт,
-  проверяет пароли на соотвествие друг с другом,
   загружает данные из бд и позволяет войти в систему
 */
 
 var countError = 0
-
-function validatePassword() {
-		  var password = document.getElementById("pwd");
-  		var confirm_password = document.getElementById("conf_pwd");
-
-  		if(password.value != confirm_password.value) {
-    		confirm_password.setCustomValidity("Пароли не совпадают");
-  		} 
-  		else 
-  		{
-    		confirm_password.setCustomValidity('');
-  		}
-}
-
 
 function loadData() {
     var input_login = document.getElementById("input_for_login").value;
@@ -47,7 +32,6 @@ function loadData() {
         var data = xhr.responseText;
         var jsonResponse = JSON.parse(data);
         
-        // переделать здесь ошибка
         var pwd = document.securityCheck.password.value;
         try{
             if (jsonResponse[input_login][0] == pwd)
@@ -64,7 +48,7 @@ function loadData() {
                   window.close();
                 }
                 else{
-                  alert("Bad");
+                  alert("Пароль введён неправильно");
                   countError = countError + 1;
                   console.log(countError);
                 }
