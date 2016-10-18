@@ -57,7 +57,7 @@ def list_of_users_win():
 							<p> Блокировка <input type="checkbox" id="block"> </p>
 							<p> Парольное ограничение <input type="checkbox" id="limitation"> </p> 
 							<p>
-								<input type="button" value="Добавить" class="finally_add" onclick="addUser()">
+								<input type="button" value="Добавить" class="finally_add" onclick="addUser();">
 							</p>
 						</div>
 					</div>

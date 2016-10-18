@@ -77,7 +77,7 @@ function saveChanges() {
 	var is_limit = 'No';
 	if ($('#change_block').prop("checked"))
 		is_block = 'Yes';
-	if ($('#change_limit').prop(":checked")){
+	if ($('#change_limit').prop("checked")){
 		is_limit = 'Yes';
 		console.log('Yes');
 	}
@@ -119,11 +119,15 @@ function checkInput(login) {
 var encryptedPasswords = [];
 
 function addUser() {
-	var login = document.getElementById('loginData');
-	var password = document.getElementById('passwordData');
-	if (checkInput(login) && checkInput(password)){
-		var login = $('#loginData').val();
-		var password = $('#passwordData').val();
+	var login = $('#loginData').val();
+	var password = $('#passwordData').val();
+	if (login == "" || password == ""){
+		$('#loginData').val(""); $('#passwordData').val("");
+
+		document.getElementById('loginData').setCustomValidity('Введите логин');
+		document.getElementById('passwordData').setCustomValidity('Введите пароль');
+	}
+	else {	 
 		var login_pwd = login + password;
 		var items = [];
 
@@ -136,7 +140,6 @@ function addUser() {
 
 		var table_login_pwd = '';
 		var count = -1;
-		// var number_dupl_item = -1;
 
 		for (var i = 0; i < items.length; i++) {
 			table_login_pwd = table_login_pwd + items[i];
