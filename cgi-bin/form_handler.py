@@ -75,12 +75,6 @@ def list_of_users_win():
 							</p>
 						</div>
 						<div id="change_select">
-							<div class="labels">
-								<div class="rows">
-									<p> Изменить пароль: </p> <!-- пароль хранится в расшифрованном виде -->
-									<input type="password" id="change_passwd" required>
-								</div>
-							</div>
 							<div class="others">							
 								<p> Блокировка <input type="checkbox" id="change_block"> </p>
 								<p> Парольное ограничение <input type="checkbox" id="change_limit"> </p>
@@ -123,35 +117,13 @@ def change_pwd(login):
             <title>Смена пароля</title>
             <link href="../css/entrance.css" rel="stylesheet">
             <link href="../css/change_password.css" rel="stylesheet">
-            <script type="text/javascript" src="../js/jQuery.js"></script>
-            <script type="text/javascript" src="../js/savePassword.js"></script>
+            <script src="../js/jQuery.js"></script>
+            <script src="../js/makePage.js">
+            <script src="../js/savePassword.js"></script>
         </head>
         <body>""")
 
-	main_part = """<div class="main">
-				<h1> Смена пароля </h1>
-				<form name="admin" action="saveData.py" method="post">
-
-					
-						<div class="firstRow">
-							<p> Старый пароль: </p>
-							<input type="password" name="oldPasswd" required id="oldPwd">
-						</div>
-						<div class="secondRow">
-							<p> Новый пароль: </p>
-							<input type="password" name="newPasswd" required id="pwd" onchange="validatePassword();">
-						</div>
-						<div class="thirdRow">
-							<p> Повтор нового пароля: </p>
-							<input type="password" name="verification" required id="conf_pwd" onkeyup="validatePassword();">
-						</div>
-						<p>
-							<input type="button" value="Поменять" id="save_btn" onclick="save()">
-						</p>
-					</div>
-
-				</form>
-			</div>"""
+	main_part = """<div class="main"></div>"""
 	print(main_part)
 
 	print("""</body>

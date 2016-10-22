@@ -32,11 +32,10 @@ function go_next() {
 			document.getElementById('login_select').style.display = "none";
 			document.getElementById('change_select').style.display = "block";
 
+			// поставить значения блока и ограничения на соотвествующие
+			// checkboxes на форме
 			var rowNumber = getNumberOfRow(login_val);
-			var currEncryptedPassword = encryptedPasswords[rowNumber];
-			document.getElementById('change_passwd').value = currEncryptedPassword;
 			rowNumber++;
-
 			var blockInTable = $('table tr:eq(' + rowNumber + ') td:eq(2)');
 			var limitInTable = $('table tr:eq(' + rowNumber + ') td:eq(3)');
 			if (blockInTable.text() == "Yes")
@@ -65,22 +64,15 @@ function getNumberOfRow(login) {
 
 function saveChanges() {
 	var login_val = document.getElementById('login_for_change').value;
-	var passwd_val = document.getElementById('change_passwd').value;
 	var numberLoginInRow = getNumberOfRow(login_val);
-	var encryptedValue = encryptedPasswords[numberLoginInRow];
-	if (passwd_val != encryptedValue){
-		var encryptedChangePassword = CryptoJS.AES.encrypt(passwd_val, 'password');
-		encryptedPasswords[numberLoginInRow] = encryptedChangePassword;
-	}
 
 	var is_block = 'No';
 	var is_limit = 'No';
 	if ($('#change_block').prop("checked"))
 		is_block = 'Yes';
-	if ($('#change_limit').prop("checked")){
+	if ($('#change_limit').prop("checked"))
 		is_limit = 'Yes';
-		console.log('Yes');
-	}
+
 	$('table td:first-child').each(function (){
 		if ($(this).text() == login_val){
 			var new_row = '<tr><td>' + login_val + '</td><td>' + encryptedPasswords[numberLoginInRow] 
