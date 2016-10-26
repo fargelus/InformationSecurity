@@ -118,13 +118,9 @@ def change_pwd(login):
             <link href="../css/entrance.css" rel="stylesheet">
             <link href="../css/change_password.css" rel="stylesheet">
             <script src="../js/jQuery.js"></script>
-            <script src="../js/makePage.js">
             <script src="../js/savePassword.js"></script>
         </head>
         <body>""")
-
-	main_part = """<div class="main"></div>"""
-	print(main_part)
 
 	print("""</body>
         </html>""")

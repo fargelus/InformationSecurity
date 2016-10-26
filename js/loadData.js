@@ -6,43 +6,47 @@
 var countError = 0
 
 function loadData() {
-    var input_login = document.getElementById("input_for_login").value;
-    localStorage.setItem("login", input_login);
+    var inputLogin = document.getElementById("input_for_login").value;
+
+    setMetaObject(inputLogin);
+    
+    var address = "";
+    if (inputLogin.toLowerCase() == "admin"){
+		address = "../admin.json";
+		inputLogin = inputLogin.toLowerCase();
+		localStorage.setItem("address", "admin");
+	}
+	else{
+		address = "../users.json";
+		localStorage.setItem("address", "users");	
+	}
+	localStorage.setItem("login", inputLogin);    
 
     var xhr = new XMLHttpRequest();
-    if (input_login.toLowerCase() == "admin")
-    {
-        localStorage.setItem("address", "admin");
-        input_login = input_login.toLowerCase();
-        console.log(input_login);
-        xhr.open('GET', '../admin.json', false);        
-    }
-    else
-    {
-        localStorage.setItem("address", "users");
-        xhr.open('GET', '../users.json', false);
-    }
+    xhr.open('GET', address, false);
     xhr.send();
 
     if (xhr.status != 200) {
       // обработать ошибку
       alert('Ошибка ' + xhr.status + ': ' + xhr.statusText);
-    } else {
+    } 
+    else {
         // вывести результат
         var data = xhr.responseText;
         var jsonResponse = JSON.parse(data);
         
         var pwd = document.securityCheck.password.value;
         try{
-            if (jsonResponse[input_login][0] == pwd)
-            {
-                if (jsonResponse[input_login][1] == "Yes")
+            if (jsonResponse[inputLogin][0] == pwd) {
+            	if (jsonResponse[inputLogin][2] == "Yes")
+            		localStorage.setItem("isLimit", "true");
+            	
+                if (jsonResponse[inputLogin][1] == "Yes")
                   alert("Данный логин заблокирован администратором");
                 else
                   document.securityCheck.submit();
             }
-            else
-            {
+            else {
                 if (countError == 3){
                   window.open('', '_self', ''); 
                   window.close();
@@ -58,4 +62,25 @@ function loadData() {
           alert("Такого логина нет в базе данных");
         }
     }
+}
+
+/* метаобъект - информация, хранящая информацию о кол-ве входов
+   каждого пользователя в систему */
+function setMetaObject(login) {
+	var meta = localStorage.getItem("metaobject");
+    meta = JSON.parse(meta);
+
+    if (meta == null){
+    	meta = {};
+    	meta[login] = 0;
+    }
+    else{
+    	if (login in meta){
+    		meta[login]++;
+    	}
+    	else
+    		meta[login] = 0;
+    }
+
+    localStorage.setItem("metaobject", JSON.stringify(meta));
 }

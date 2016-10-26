@@ -1,3 +1,60 @@
+$(document).ready(function(){
+	var meta = localStorage.getItem("metaobject");
+	var login = localStorage.getItem("login");
+	var isLimit = localStorage.getItem("isLimit");
+	meta = JSON.parse(meta);
+	console.log(meta);
+
+	var $htmlToBuilt = $(generateHtml());
+	if (isLimit != null){
+		alert("На ваш пароль установлено ограничение");
+	}
+	else { 
+			if (meta[login] != 0){
+				$htmlToBuilt = $("<p class='changeBtn'>\
+									<input type='button' value='Изменить пароль' onclick='change();'>\
+									<input type='button' value='Выход' onclick='exit();'>\
+								</p>");
+			}
+		}
+
+	$("body").append($htmlToBuilt);
+});
+
+function generateHtml() {
+	return "<div class='main'> \
+				<h1> Смена пароля </h1>\
+					<form name='admin' action='saveData.py' method='post'>\
+						<div class='firstRow'>\
+							<p> Старый пароль: </p>\
+							<input type='password' name='oldPasswd' required id='oldPwd'> \
+						</div>\
+						<div class='secondRow'> \
+							<p> Новый пароль: </p> \
+								<input type='password' name='newPasswd' required id='pwd' onchange='validatePassword();'>\
+						</div>\
+						<div class='thirdRow'>\
+							<p> Повтор нового пароля: </p>\
+							<input type='password' name='verification' required id='conf_pwd' onkeyup='validatePassword();'>\
+						</div>\
+						<p>\
+							<input type='button' value='Поменять' id='save_btn' onclick='save();'>\
+						</p>\
+					</form> \
+			</div>";
+}
+
+function change() {
+	$(".changeBtn").remove();
+	$("body").append(generateHtml());
+}
+
+function exit() {
+	if (confirm("Вы действительно хотите выйти?")) {
+			window.location.replace('http://localhost:8000');
+    }
+}
+
 /* save.js - отправляет пароль 
    на сервер совместно с метаданными */
 function save() {
@@ -11,6 +68,7 @@ function save() {
 		var new_password = document.getElementById('pwd');
 		var login_val = localStorage.getItem("login"); 
 		var addr_val = localStorage.getItem("address");
+		console.log(addr_val);
 		if (new_password.value.length != 0){
 			if (!is_limit(new_password.value)){
 				var data_to_send = {};
