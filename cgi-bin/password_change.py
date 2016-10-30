@@ -9,41 +9,45 @@
 
 import sys
 import json
-import fileinput
 import cgi
+import pickle
+from encryptDB import path
+import os
+
+here = os.path.dirname(os.path.abspath(__file__))
 
 fs = cgi.FieldStorage()
+addedPath = str()
+username = "".join(fs.keys())
+if username == "admin":
+	addedPath = "/admin.pickle"
+else:
+	addedPath = "/users.pickle"
+
+# считываем сериализованные данные из файла
+with open(path + addedPath, 'rb') as db:
+	data = pickle.load(db)
+
+data[username] = fs.getvalue(username)
+
+with open(path + addedPath, 'wb') as db:
+	pickle.dump(data, db)
+
+with open(path + addedPath, 'rb') as db:
+	new_data = pickle.load(db)
+
+with open(path + "/dump", 'w') as db:
+	json.dump(new_data, db)
+
+# сформировать ответ
+result = {}
+result['success'] = True
+result['message'] = "The command Completed Successfully"
 
 sys.stdout.write("Content-Type: application/json")
 
 sys.stdout.write("\n")
 sys.stdout.write("\n")
-
-result = {}
-result['success'] = True
-result['message'] = "The command Completed Successfully"
-result['keys'] = ",".join(fs.keys())
-
-receive = {}
-for k in fs.keys():
-    receive[k] = fs.getvalue(k)
-
-address = ""
-if receive["address"] == "admin":
-	address = "/home/dima/Рабочий стол/ИБ(1-я лаба)/admin.json"
-else:
-	address = "/home/dima/Рабочий стол/ИБ(1-я лаба)/users.json"
-
-with open(address) as db:
-	data = json.load(db)
-
-data[receive["login"]][0] = receive["password"]
-
-with open(address, 'w') as db:
-	json.dump(data, db)
-
-# сформировать ответ
-result['data'] = receive
 
 sys.stdout.write(json.dumps(result,indent=1))
 sys.stdout.write("\n")

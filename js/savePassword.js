@@ -1,22 +1,25 @@
 $(document).ready(function(){
-	var meta = localStorage.getItem("metaobject");
-	var login = localStorage.getItem("login");
-	var isLimit = localStorage.getItem("isLimit");
-	meta = JSON.parse(meta);
-	console.log(meta);
+	var object = localStorage.getItem("object");
+	object = JSON.parse(object);
 
 	var $htmlToBuilt = $(generateHtml());
-	if (isLimit != null){
-		alert("На ваш пароль установлено ограничение");
-	}
-	else { 
-			if (meta[login] != 0){
+	var offset = 0;
+	for (key in object){
+		if (key == "admin")
+			offset = 1;
+		else
+			offset = 3;
+
+		if (offset == 3 && object[key][2] == "Yes")
+			alert("На ваш пароль установлено ограничение");
+			
+		else if (object[key][offset] > 0)
 				$htmlToBuilt = $("<p class='changeBtn'>\
-									<input type='button' value='Изменить пароль' onclick='change();'>\
-									<input type='button' value='Выход' onclick='exit();'>\
-								</p>");
-			}
-		}
+										<input type='button' value='Изменить пароль' onclick='change();'>\
+										<input type='button' value='Выход' onclick='exit();'>\
+								  </p>");
+
+	}
 
 	$("body").append($htmlToBuilt);
 });
@@ -58,119 +61,100 @@ function exit() {
 /* save.js - отправляет пароль 
    на сервер совместно с метаданными */
 function save() {
-	// если пароли не совпадают известить об этом пользователя
-	if (!isPasswordsMatch()){
-		document.getElementById('pwd').setCustomValidity('Пароли не совпадают');
-		return;
-	}
-
-	if (isOldPasswordCorrect()){
-		var new_password = document.getElementById('pwd');
-		var login_val = localStorage.getItem("login"); 
-		var addr_val = localStorage.getItem("address");
-		console.log(addr_val);
-		if (new_password.value.length != 0){
-			if (!is_limit(new_password.value)){
-				var data_to_send = {};
-				if (addr_val == "admin")
-					login_val = login_val.toLowerCase();
-				data_to_send['login'] = login_val;
-				data_to_send['address'] = addr_val;
-				data_to_send['password'] = new_password.value;
-
-				$.ajax({
-					type: "POST",
-					data: data_to_send,
-					url: "../cgi-bin/password_change.py",
-					datatype: "json",
-					traditional: true,
-					success: function(response){
-						alert('Пароль успешно изменён');
-			        	window.location.replace('http://localhost:8000');
-					},
-					error: function(response) {
-		  					console.log(response.status + ': ' + response.statusText);
-						}
-				});
-			}
-			else
-				alert("Введённый пароль не соотвествует ограничениям");
-		}
-		else
-			new_password.setCustomValidity("Вы должны ввести пароль");
-	}
-	else{
+	if (!isOldPasswordCorrect()){	
 		alert('Введён неверный пароль подтверждения');
 		document.getElementById('oldPwd').value = '';
 		document.getElementById('pwd').value = '';
 		document.getElementById('conf_pwd').value = '';
+		return;
 	}
+
+	if (!isPasswordsMatch()){
+		document.getElementById('pwd').setCustomValidity('Пароли не совпадают или вы не ввели новый пароль');
+		document.getElementById('pwd').value = '';
+		document.getElementById('conf_pwd').value = '';
+		return;	
+	}
+	
+	var object = localStorage.getItem("object");
+	object = JSON.parse(object);
+
+	for (key in object){
+		if (!hasLimit()){
+			object[key][0] = document.getElementById('pwd').value;
+			object[key][2] = "No";
+			console.log(key);
+		}
+		else{
+			alert("Введённый пароль не удовлетворяет ограничениям!");
+			document.getElementById('oldPwd').value = '';
+			document.getElementById('pwd').value = '';
+			document.getElementById('conf_pwd').value = '';
+			return;
+		}
+	}
+
+	// отправляем нашу изменённую структуру для записи в сериализованную 
+	// бд
+	$.ajax({
+		type: "POST",
+		data: object,
+		url: "../cgi-bin/password_change.py",
+		datatype: "json",
+		traditional: true,
+		success: function(response){
+			alert('Пароль успешно изменён');
+			window.location.replace('http://localhost:8000');
+		},
+		error: function(response) {
+		  	console.log(response.status + ': ' + response.statusText);
+		}
+	});
 }
 
-// проверка подтверждения пароля
-function isPasswordsMatch() {
-	var newPwd = document.getElementById('pwd').value;
-	var confirmedPwd = document.getElementById('conf_pwd').value;
-	if (newPwd == confirmedPwd)
-		return true;
-	return false;
-}
-
-// проверка старого пароля перед сохранением нового
+// правильно ли введён старый пароль
 function isOldPasswordCorrect() {
-	var retVal = false;
+	var answer = true;
 	var oldPwd = document.getElementById('oldPwd').value;
-	var login_val = localStorage.getItem("login");
-	var checkOldPassword = new XMLHttpRequest();
-	if (login_val.toLowerCase() == "admin")
-		checkOldPassword.open('GET', '../admin.json', false);
-	else
-		checkOldPassword.open('GET', '../users.json', false);
-	checkOldPassword.send();
-
-	if (checkOldPassword.status != 200) {
-      // обработать ошибку
-      alert('Ошибка ' + checkOldPassword.status + ': ' + checkOldPassword.statusText);
-    } else {
-        // вывести результат
-        var data = checkOldPassword.responseText;
-        var jsonResponse = JSON.parse(data);
-
-        if (jsonResponse[login_val][0] == oldPwd)
-        	retVal = true;
-    }
-
-    return retVal;	
-}
-
-// проверка на ограничение
-function is_limit(password) {
-	var answer = false;
-	var login = localStorage.getItem("login");
-	var address = localStorage.getItem("address");
-	var path = '../' + address + '.json';
-
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', path, false);
-	xhr.send();
-
-	if (xhr.status != 200) {
-      // обработать ошибку
-      alert('Ошибка ' + xhr.status + ': ' + xhr.statusText);
-    } else {
-        // вывести результат
-        var data = xhr.responseText;
-        var jsonResponse = JSON.parse(data);
-    	if (jsonResponse[login][2] == "Yes"){
-    		var matched = password.match(/^[A-Za-z\/\+\-\*.,\/#!$%\^&\*;:{}=\-_`~()]+$/ig); 
-    		if (matched == null)
-    			answer = true;
-    	}
-    }
+	var object = localStorage.getItem("object");
+	object = JSON.parse(object);
+	for (key in object){
+		if (object[key][0] != oldPwd)
+			answer = false; 
+	}
 
 	return answer;
 }
 
+// проверка подтверждения пароля
+function isPasswordsMatch() {
+	var answer = false;
+	var newPwd = document.getElementById('pwd').value;
+	var confirmedPwd = document.getElementById('conf_pwd').value;
+	if (newPwd == confirmedPwd && newPwd != '')
+			answer = true;
+
+	return answer;
+}
+
+// проверка пароля на ограничение
+function hasLimit() {
+	var answer = false;
+	var object = localStorage.getItem("object");
+	object = JSON.parse(object);
+	for (key in object){
+		if (object[key][2] == "Yes"){
+			var newPwd = document.getElementById('pwd').value;
+			var matched = newPwd.match(/^[A-Za-z\/\+\-\*.,\/#!$%\^&\*;:{}=\-_`~()]+$/ig);
+			if (matched == null)
+				answer = true; 
+		}
+	}
+
+	return answer;
+}
+
+// валидация в режиме реального времени
 function validatePassword() {
 	var password = document.getElementById("pwd");
   	var confirm_password = document.getElementById("conf_pwd");

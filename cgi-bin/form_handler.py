@@ -8,8 +8,8 @@
 
 import cgi
 import json
-
-path_db = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
+import pickle
+from encryptDB import path
 
 def list_of_users_win():
 	print("Content-type: text/html\n")
@@ -34,6 +34,7 @@ def list_of_users_win():
 							<th> Пароль </th>
 							<th> Блокировка </th>
 							<th> Ограничение </th>
+							<th> Кол-во входов в систему </th>
 						</tr>
 					</table>
 
@@ -98,17 +99,7 @@ def list_of_users_win():
 	print("""</body>
         </html>""")
 
-def change_pwd(login):
-	with open(path_db) as db:
-		data = json.load(db)
-
-	# если входит админ, то
-	# увеличиваем кол-во входов на 1
-	if login == "admin":
-		data[login][1] = 1
-		with open(path_db, 'w') as outfile:
-			json.dump(data, outfile)
-
+def change_pwd(login, data):
 	print("Content-type: text/html\n")
 	print("""<!DOCTYPE HTML>
         <html>
@@ -129,16 +120,17 @@ if __name__ == '__main__':
 	form = cgi.FieldStorage()
 	login = form.getfirst("login")
 
+	addedPath = str()
 	if login.lower() == "admin":
 		login = login.lower()
-		path_db += "/admin.json"
+		addedPath = "/admin.pickle"
 	else:
-		path_db += "/users.json"
+		addedPath = "/users.pickle"
 
-	with open(path_db) as db:
-		data = json.load(db)
+	with open(path + addedPath, 'rb') as db:
+		data = pickle.load(db)
+
 	if login == "admin" and data["admin"][1] > 0:
 		list_of_users_win()
 	else:
-		change_pwd(login)
-	
+		change_pwd(login, data)
