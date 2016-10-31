@@ -8,8 +8,8 @@
 
 import cgi
 import json
-import pickle
 from encryptDB import path
+import shelve
 
 def list_of_users_win():
 	print("Content-type: text/html\n")
@@ -123,14 +123,15 @@ if __name__ == '__main__':
 	addedPath = str()
 	if login.lower() == "admin":
 		login = login.lower()
-		addedPath = "/admin.pickle"
+		addedPath = "/admin"
 	else:
-		addedPath = "/users.pickle"
+		addedPath = "/users"
 
-	with open(path + addedPath, 'rb') as db:
-		data = pickle.load(db)
+	data = shelve.open(path + addedPath, 'r')
 
 	if login == "admin" and data["admin"][1] > 0:
 		list_of_users_win()
 	else:
 		change_pwd(login, data)
+
+	data.close()

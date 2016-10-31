@@ -73,12 +73,20 @@ function saveChanges() {
 	if ($('#change_limit').prop("checked"))
 		is_limit = 'Yes';
 
+	var lastChilds = [];
+	$('table td:last-child').each(function (){
+		lastChilds.push( $(this).text() );
+	});	
+
+	var countRow = 0;
 	$('table td:first-child').each(function (){
 		if ($(this).text() == login_val){
 			var new_row = '<tr><td>' + login_val + '</td><td>' + encryptedPasswords[numberLoginInRow] 
-			+ '</td><td>' + is_block + '</td><td>' + is_limit + '</td></tr>';
+			+ '</td><td>' + is_block + '</td><td>' + is_limit + '</td><td>' 
+			+ lastChilds[countRow] + '</td></tr>';
 			$(this).parent().replaceWith(new_row); 
 		}
+		countRow++;
 	});
 	
 	document.getElementById('change_select').style.display = "none";
@@ -126,6 +134,7 @@ function addUser() {
 		$('table td:nth-child(-n+2)').each(function() {
 			items.push( $(this).text() );
 		});
+		console.log(items);
 
 		// проверяем на повторяющийся логин
 		var is_duplicate = false;
@@ -160,8 +169,8 @@ function addUser() {
         	encryptedPasswords.push(encrypt_password);
 
 			$('table').append('<tr><td>' + login + '</td><td>' + encrypt_password + '</td><td>' + is_block + '</td><td>'
-				+ is_limit + '</td></tr>');
-		}
+				+ is_limit + '</td><td>' + Number(0).toString() + '</td></tr>');
+		} 
 
 		document.getElementById('add_form').style.display = "none";
 	}
@@ -171,33 +180,37 @@ function tableToJson() {
 	// преобразуем данные из таблицы в json
 	// для ajax
 
+	// считываем все логины из таблицы
 	var login_list = [];
 	$('table td:nth-child(-n+1)').each(function(){
 		login_list.push( $(this).text() );
 	});
 
+	// считываем все атрибуты
 	var attr_list = [];
 	$('table td:nth-child(n+2)').each(function(){
 		attr_list.push( $(this).text() );
 	});	
 
+	// формируем json структуру
 	var data = {};
 	var password_count = 0;
 	for (var i = 0; i < login_list.length; i++) {
 		var login = login_list[i];
 		var attr = [];
-		for (var j = 3 * i; j <= 3 * i + 2; j++) {
-			if (j % 3 == 0){
+		for (var j = 4 * i; j <= 4 * i + 3; j++) {
+			if (j % 4 == 0){
 				var password_to_decrypt = encryptedPasswords[password_count];
 				var decrypted = CryptoJS.AES.decrypt(password_to_decrypt, 'password').toString(CryptoJS.enc.Utf8);
 				console.log(decrypted);
 				attr.push(decrypted);
 				password_count++;
-				// encryptedPasswords.splice(password_count);	 
 			}
 			else
 				attr.push(attr_list[j]);		
 		}
+
+		console.log(attr);
 		data[login] = attr;
 	}
 	
@@ -206,8 +219,19 @@ function tableToJson() {
 
 /* добавление данных в таблицу из базы данных */
 $(document).ready(function(){
-	$.getJSON('../users.json', function(json){
-		$.each(json, function(key, value){
+	var emptyObject = {};
+	$.ajax({
+      type: "POST",
+      data: emptyObject,
+      url: "../cgi-bin/return_data.py",
+      datatype: "json",
+      traditional: true,
+
+      success: function(response){
+        var jsonTable = JSON.stringify(response);
+        console.log(jsonTable);
+        
+        $.each(response, function(key, value){
         	var tr = $('<tr>');
         	tr.append("<td>" + key + "</td>");
         	for (var i = 0; i < value.length; i++) {
@@ -225,14 +249,19 @@ $(document).ready(function(){
         	tr.append('</tr>');
         	$('table').append(tr);
 		});
-	});
-});
+
+      },
+
+      error: function(response){
+        alert("Не нашёл базу данных");
+      }
+    }); // ajax call close
+});	// function close
 
 /* сохранить данные в базе */
 $(document).ready(function() {
 	$("#save_btn").click(function() {
 		var data = tableToJson();
-
 		$.ajax({
 			type: "POST",
 			data: data,

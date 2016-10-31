@@ -10,34 +10,27 @@
 import sys
 import json
 import cgi
-import pickle
-from encryptDB import path
-import os
+import shelve
 
-here = os.path.dirname(os.path.abspath(__file__))
+path = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
 fs = cgi.FieldStorage()
 addedPath = str()
 username = "".join(fs.keys())
 if username == "admin":
-	addedPath = "/admin.pickle"
+	addedPath = "/admin"
 else:
-	addedPath = "/users.pickle"
+	addedPath = "/users"
 
 # считываем сериализованные данные из файла
-with open(path + addedPath, 'rb') as db:
-	data = pickle.load(db)
+data = shelve.open(path + addedPath, 'w')
 
 data[username] = fs.getvalue(username)
 
-with open(path + addedPath, 'wb') as db:
-	pickle.dump(data, db)
-
-with open(path + addedPath, 'rb') as db:
-	new_data = pickle.load(db)
-
 with open(path + "/dump", 'w') as db:
-	json.dump(new_data, db)
+	json.dump(dict(data), db)
+
+data.close()
 
 # сформировать ответ
 result = {}

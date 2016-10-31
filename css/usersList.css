@@ -12,6 +12,10 @@
 	border-collapse: collapse;
 }
 
+.main table th:last-child, .main table tr td:last-child{
+	display: none;
+}
+
 .main table caption{
 	margin-bottom: 15px;
 	font-size: 1.6em;
