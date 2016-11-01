@@ -13,7 +13,7 @@ $(document).ready(function(){
 		if (offset == 3 && object[key][2] == "Yes")
 			alert("На ваш пароль установлено ограничение");
 			
-		else if (object[key][offset] > 0)
+		else if (object[key][offset] > 1)
 				$htmlToBuilt = $("<p class='changeBtn'>\
 										<input type='button' value='Изменить пароль' onclick='change();'>\
 										<input type='button' value='Выход' onclick='exit();'>\

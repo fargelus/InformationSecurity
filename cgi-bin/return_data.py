@@ -1,17 +1,12 @@
 #!/usr/bin/env python3
 
-import sys, json, cgi, shelve
-from encryptDB import path
+import sys, json, cgi
 
 fs = cgi.FieldStorage()
+path = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
-data = shelve.open(path + "/users")
-path_to_write = path + "/users"
-with open(path + "/dump", 'w') as dump:
-	dump.write(path_to_write)
-
-response = dict(data)
-data.close()
+with open (path + "/users.json", 'r') as db:
+	response = json.load(db)
 
 sys.stdout.write("Content-Type: application/json")
 

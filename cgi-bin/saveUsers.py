@@ -6,10 +6,9 @@
 """
 
 import sys, json, cgi
-from encryptDB import path
-import shelve
 
 fs = cgi.FieldStorage()
+path = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
 receive = {}
 try:	
@@ -18,11 +17,8 @@ try:
 except TypeError:
 	pass
 
-data = shelve.open(path + "/users", 'w')
-for key in receive:
-	data[key] = receive[key]
-
-data.close()
+with open(path + "/users.json", 'w') as db:
+	json.dump(receive, db)
 
 sys.stdout.write("Content-Type: application/json")
 

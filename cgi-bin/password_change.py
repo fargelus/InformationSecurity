@@ -10,7 +10,6 @@
 import sys
 import json
 import cgi
-import shelve
 
 path = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
 
@@ -18,19 +17,19 @@ fs = cgi.FieldStorage()
 addedPath = str()
 username = "".join(fs.keys())
 if username == "admin":
-	addedPath = "/admin"
+	addedPath = "/admin.json"
 else:
-	addedPath = "/users"
+	addedPath = "/users.json"
 
-# считываем сериализованные данные из файла
-data = shelve.open(path + addedPath, 'w')
+with open(path + addedPath, 'r') as db:
+	data = json.load(db)
 
+# меняем пароль
 data[username] = fs.getvalue(username)
 
-with open(path + "/dump", 'w') as db:
-	json.dump(dict(data), db)
-
-data.close()
+# записываем изменения
+with open(path + addedPath, 'w') as db:
+	json.dump(data, db)
 
 # сформировать ответ
 result = {}

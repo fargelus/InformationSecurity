@@ -8,8 +8,6 @@
 
 import cgi
 import json
-from encryptDB import path
-import shelve
 
 def list_of_users_win():
 	print("Content-type: text/html\n")
@@ -18,9 +16,9 @@ def list_of_users_win():
         <head>
             <meta charset="utf-8">
             <title>Обработчик формы</title>
-            <script type="text/javascript" src="../js/CryptoJS v3.1.2/rollups/aes.js"></script>
-            <script type="text/javascript" src="../js/jQuery.js"></script>
-            <script type="text/javascript" src="../js/addUser.js"></script>
+            <script src="../js/CryptoJS v3.1.2/rollups/aes.js"></script>
+            <script src="../js/jQuery.js"></script>
+            <script src="../js/addUser.js"></script>
             <link href="../css/usersList.css" rel="stylesheet">
         </head>
         <body>""")
@@ -99,7 +97,7 @@ def list_of_users_win():
 	print("""</body>
         </html>""")
 
-def change_pwd(login, data):
+def change_pwd():
 	print("Content-type: text/html\n")
 	print("""<!DOCTYPE HTML>
         <html>
@@ -123,15 +121,15 @@ if __name__ == '__main__':
 	addedPath = str()
 	if login.lower() == "admin":
 		login = login.lower()
-		addedPath = "/admin"
+		addedPath = "/admin.json"
 	else:
-		addedPath = "/users"
+		addedPath = "/users.json"
 
-	data = shelve.open(path + addedPath, 'r')
+	path = "/home/dima/Рабочий стол/ИБ(1-я лаба)"
+	with open(path + addedPath, 'r') as db:
+		data = json.load(db)
 
 	if login == "admin" and data["admin"][1] > 0:
 		list_of_users_win()
 	else:
-		change_pwd(login, data)
-
-	data.close()
+		change_pwd()
