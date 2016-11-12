@@ -35,11 +35,6 @@
 	position: relative;
 }
 
-.help img{
-	position: absolute;
-	left: 50%;
-}
-
 /*
 input:focus:required:invalid{
 	background-image: url("../ico/unchecked.png");
